@@ -97,7 +97,7 @@ pd.read_sql(" select r.name ,o.status as order_status,count(o.status) as  no_of_
 "  where  o.status = 'Cancelled' group by r.name order by  no_of_order_cancelled desc ;",engine)
 ```
 ### 9) calculate rate comparison:
-## calculate and compare the order cancellation rate for each restaurants the current year or the privious year
+### calculate and compare the order cancellation rate for each restaurants the current year or the privious year
 ```sql
 pd.read_sql(" with cancel_rate as  (select o.restaurant_id as restaurant_id,r.name as name,count(o.order_id) as total_orders,"\
 "cast(sum(o.status = 'Cancelled')as signed) as not_deliverd_order " \
@@ -150,8 +150,8 @@ pd.read_sql(" select " \
 " as t1 group by cx_category ",engine)
 ```
 ### 13.rider monthly earning :
-## calculated each riders total monthly earning assuming they earn 8% of the order_amount 
-## each riders- orders- total amount -8%   
+### calculated each riders total monthly earning assuming they earn 8% of the order_amount 
+###each riders- orders- total amount -8%   
 ```sql
 pd.read_sql("select p.delivery_person_id,p.name ," \
 "date_format(o.order_date,'%m-%y') as month, sum(total_amount) as revenue , " \
@@ -162,10 +162,10 @@ pd.read_sql("select p.delivery_person_id,p.name ," \
 "order by delivery_person_id,month,name asc  ",engine)
 ```
 ### 14. riders rating analysis : 
-## find the number of 5star ,4star ,3star rating each riders has 
-## riders receive this rating basded on delivery time 
-## if order deliverd less then 35min give 5 star 
-## if they deliver under 45 then  give 4 star if they deliver under 55 min  give 3 or if they deliver after 75 give 2 star 
+### find the number of 5star ,4star ,3star rating each riders has 
+### riders receive this rating basded on delivery time 
+### if order deliverd less then 35min give 5 star 
+### if they deliver under 45 then  give 4 star if they deliver under 55 min  give 3 or if they deliver after 75 give 2 star 
 ```sql
 pd.read_sql(" select delivery_person_id,stars," \
 " count(*) as total_stars from (select o.order_id ,d.delivery_id,d.delivery_person_id ," \
@@ -195,14 +195,14 @@ pd.read_sql("select c.customer_id,c.name,sum(o.total_amount) as total_revenue fr
 "order by total_revenue desc ",engine)
 ```
 ### 17) identify sales trend 
-##identify  the sales trend by comparing each month total sales to the privious month 
+###identify  the sales trend by comparing each month total sales to the privious month 
 ```sql
 pd.read_sql("select extract(year from order_date) as year,extract(month from order_date) as month,sum(total_amount) as month_sale," \
 " lag(sum(total_amount),1) over(order by extract(year from order_date),extract(month from order_date)) as privious_month_sale"\
 " from orders group by year,month order by year,month asc ",engine)
 ```
 ### 18. rider efficiency: 
-## evaluate rider efficiency by determining average delivery times and identifying those with the lowest and highest average
+### evaluate rider efficiency by determining average delivery times and identifying those with the lowest and highest average
 ```sql
 pd.read_sql(" with riders_time as (select  p.delivery_person_id,p.name,avg(timestampdiff(minute,o.order_date,o.delivery_time)) as delivery_time" \
 " from orders o join deliveries d on o.order_id = d.order_id join delivery_person p on d.delivery_person_id	= p.delivery_person_id " \
