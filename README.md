@@ -45,7 +45,7 @@ pd.read_sql(" with RestaurantsRevenue as (select r.name as restaurant_name ,r.lo
 " group by r.name,r.location order by total_revenue desc)" \
 "select * from RestaurantsRevenue where ranking = 1 ",engine)
 ```
-###5) restaurants revenue ranking:
+### 5) restaurants revenue ranking:
 rank restaurants by their total revenue from the last year,including their name,total revenue, and rank eithin their city 
 ```sql
 top_restaurants_in_2025 = pd.read_sql("with revenue_in_2025 as (select r.name as restaurant_name ,r.location," \
@@ -57,7 +57,7 @@ top_restaurants_in_2025 = pd.read_sql("with revenue_in_2025 as (select r.name as
 "select * from revenue_in_2025 where ranking = 1",engine)
 top_restaurants_in_2025
 ```
-###6) customer who order in 2024 but not in 2025
+### 6) customer who order in 2024 but not in 2025
 ```sql
 pd.read_sql_query(" select  distinct c.customer_id ,c.name,c.email,c.location " \
 "from orders o join customers c on o.customer_id = c.customer_id" \
@@ -66,8 +66,7 @@ pd.read_sql_query(" select  distinct c.customer_id ,c.name,c.email,c.location " 
 "c.customer_id in ( select distinct c.customer_id from orders " \
 "where extract(year from o.order_date)!= 2025)",engine)
 ```
-### 7) churn customer:-
-##who active in 6-month but not in 30 days 
+### 7) churn customer:- who active in 6-month but not in 30 days 
 
 ```sql
 pd.read_sql("with MaxDate as ( select max(order_date) as max_order_date from orders ),"\
@@ -108,7 +107,7 @@ pd.read_sql(" with cancel_rate as  (select o.restaurant_id as restaurant_id,r.na
 " round(not_deliverd_order/total_orders *100,2) as cancel_ratio from cancel_rate",engine)
 ```
 ### 10) riders average deliver time :
-## determine each riders delivery time .
+### determine each riders delivery time .
 ```sql
 pd.read_sql(" with takenTime as (select p.delivery_person_id,o.order_id,p.name," \
 " timediff(o.delivery_time,o.order_date) as take_time_to_delivered ,d.delivery_status" \
@@ -151,7 +150,7 @@ pd.read_sql(" select " \
 ```
 ### 13.rider monthly earning :
 ### calculated each riders total monthly earning assuming they earn 8% of the order_amount 
-###each riders- orders- total amount -8%   
+### each riders- orders- total amount -8%   
 ```sql
 pd.read_sql("select p.delivery_person_id,p.name ," \
 "date_format(o.order_date,'%m-%y') as month, sum(total_amount) as revenue , " \
@@ -162,10 +161,10 @@ pd.read_sql("select p.delivery_person_id,p.name ," \
 "order by delivery_person_id,month,name asc  ",engine)
 ```
 ### 14. riders rating analysis : 
-### find the number of 5star ,4star ,3star rating each riders has 
-### riders receive this rating basded on delivery time 
-### if order deliverd less then 35min give 5 star 
-### if they deliver under 45 then  give 4 star if they deliver under 55 min  give 3 or if they deliver after 75 give 2 star 
+##### find the number of 5star ,4star ,3star rating each riders has 
+#### riders receive this rating basded on delivery time 
+#### if order deliverd less then 35min give 5 star
+#### if they deliver under 45 then  give 4 star if they deliver under 55 min  give 3 or if they deliver after 75 give 2 star 
 ```sql
 pd.read_sql(" select delivery_person_id,stars," \
 " count(*) as total_stars from (select o.order_id ,d.delivery_id,d.delivery_person_id ," \
@@ -180,7 +179,7 @@ pd.read_sql(" select delivery_person_id,stars," \
 "order by stars,total_stars desc ",engine)
 ```
 ### 15. order frequency by day  
-## analyze order frequency per day of the weak and identify the peak day for each restaturant
+### analyze order frequency per day of the weak and identify the peak day for each restaturant
 ```sql
 pd.read_sql(" select * from (select restaurant_id ,dayname(order_date) as orders_date," \
 " count(order_id) as counting_order" \
@@ -195,7 +194,7 @@ pd.read_sql("select c.customer_id,c.name,sum(o.total_amount) as total_revenue fr
 "order by total_revenue desc ",engine)
 ```
 ### 17) identify sales trend 
-###identify  the sales trend by comparing each month total sales to the privious month 
+### identify  the sales trend by comparing each month total sales to the privious month 
 ```sql
 pd.read_sql("select extract(year from order_date) as year,extract(month from order_date) as month,sum(total_amount) as month_sale," \
 " lag(sum(total_amount),1) over(order by extract(year from order_date),extract(month from order_date)) as privious_month_sale"\
